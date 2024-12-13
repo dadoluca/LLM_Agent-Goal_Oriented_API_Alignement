@@ -20,4 +20,4 @@ This repository implements a system for aligning high-level goals with API endpo
    ```
 
 ## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
+This project is licensed under the GNU GPL Version 3 License. See the [LICENSE](LICENSE) file for more information.
