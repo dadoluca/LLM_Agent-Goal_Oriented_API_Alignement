@@ -3,8 +3,9 @@ import requests
 import json 
 
 def get_markdown(link: str):
-    res = requests.get()
-    return res
+    res = requests.get(url=link)
+    return res.text
+
 
 
 
