@@ -1,5 +1,6 @@
+
 from src.examples.shot_learning import ShotPromptingMode, example1_map, example2_map
-from data_model import APIMapping
+from src.data_model import APIMapping
 from src.tools import api_list_to_string
 from src.llm_clients import generate_response
 def generate_mapping_apis_goals(lowLevelGoals, apiList, mode=ShotPromptingMode.ZERO_SHOT):
