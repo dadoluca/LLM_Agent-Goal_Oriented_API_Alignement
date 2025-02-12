@@ -6,6 +6,7 @@ from nltk.stem import PorterStemmer, WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 import nltk
 import numpy as np
+from sklearn.metrics import auc
 
 # Download the punkt tokenizer and other required resources
 nltk.download('punkt')  # Tokenizer for splitting text into words/sentences
@@ -132,12 +133,14 @@ class GoalEvaluator:
         for th in np.arange(0.01, 1, 0.01):
             # Computes the Similarities Matrix
             results = self.evaluate(generated_goals, reference_goals, th)
-        
+
+            print("recall: ", results["recall"], "precision: ", results["precision"], "fpr: ", results["fpr"])
             recall_arr.append(results["recall"])
             fpr_arr.append(results["fpr"])
             precision_arr.append(results["precision"])
-              
             
+        auc_roc = auc(fpr_arr, recall_arr) 
+        
         if not hide_prec_rec:
             # Plot della Precision-Recall Curve
             plt.figure(figsize=(8, 6))
@@ -159,6 +162,8 @@ class GoalEvaluator:
             plt.legend()
             plt.grid()
             plt.show()
+            
+        return auc_roc
 
 
 
