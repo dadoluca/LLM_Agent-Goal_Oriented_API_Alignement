@@ -1,7 +1,7 @@
 from sklearn.metrics.pairwise import cosine_similarity
 from transformers import AutoTokenizer, AutoModel
 import torch
-
+import matplotlib.pyplot as plt
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 import nltk
@@ -76,7 +76,6 @@ class GoalEvaluator:
 
         # Loop through generated goals and check their matches with reference goals
         for gen_idx, gen_goal in enumerate(generated_goals):
-
             # Find the best match for the current generated goal
             best_match_score = similarities[gen_idx].max()
 
@@ -91,8 +90,6 @@ class GoalEvaluator:
                     else:
                         fp += 1  # Incorrectly matched goal
                         current_eval = "FP"
-
-                """
                 else:
                     if similarity_cell == best_match_score:
                         fn += 1 # If the best match doesn't meet the threshold, it's a false negative
@@ -102,37 +99,66 @@ class GoalEvaluator:
                         current_eval = "TN"
 
                 rate_table[gen_idx, ref_idx] =f"({current_eval})" +f" {similarity_cell:.2f}"
-                """
-                fp = len(generated_goals) - tp
-                fn = len(reference_goals) - len(matched_refs)
         
-        print(f"TP: {tp}, FP: {fp}, TN: {tn}, FN: {fn}")
-    
         # Precision: TP / (TP + FP)
-        precision = tp / (tp + fp) 
-    
+        precision = tp / (tp + fp + 1e-9)
 
         # Recall: TP / (TP + FN)
-        recall = tp / (tp + fn) 
-
+        recall = tp / (tp + fn + 1e-9)
+        
         # F1 Score: 2 * (Precision * Recall) / (Precision + Recall)
-        f1_score = 2 * (precision * recall) / (precision + recall + 1e-9) if (precision + recall) > 0 else 0
+        f1_score = 2 * (precision * recall) / (precision + recall + 1e-9)
+        
+        # False Positive Rate: FP / (FP + TN)
+        fpr = fp / (fp + tn + 1e-9) 
         
         return {
             "precision": precision,
             "recall": recall,
             "f1_score": f1_score,
+            "fpr": fpr,
             "similarities": similarities,
             "rate_table": rate_table
         }
+        
+    def print_roc_prec_rec_curve(self, generated_goals, reference_goals, hide_roc=False,   hide_prec_rec=False):     
+        """
+        Plot the ROC and Precision-Recall curves for the generated goals.
+        """           
+        recall_arr = []
+        precision_arr = []
+        fpr_arr = []
 
-
-
-
-
-
-
-
+        for th in np.arange(0.01, 1, 0.01):
+            # Computes the Similarities Matrix
+            results = self.evaluate(generated_goals, reference_goals, th)
+        
+            recall_arr.append(results["recall"])
+            fpr_arr.append(results["fpr"])
+            precision_arr.append(results["precision"])
+              
+            
+        if not hide_prec_rec:
+            # Plot della Precision-Recall Curve
+            plt.figure(figsize=(8, 6))
+            plt.plot(precision_arr, recall_arr, marker='o', linestyle='-', color='b', label="Precision-Recall Curve")
+            plt.xlabel("Recall")
+            plt.ylabel("Precision")
+            plt.title("Precision-Recall Curve")
+            plt.legend()
+            plt.grid()
+            plt.show()
+            
+        if not hide_roc:
+            # Plot della ROC Curve
+            plt.figure(figsize=(8, 6))
+            plt.plot(fpr_arr, recall_arr, marker='o', linestyle='-', color='b', label="ROC")
+            plt.xlabel("Recall")
+            plt.ylabel("Precision")
+            plt.title("Precision-Recall Curve")
+            plt.legend()
+            plt.grid()
+            plt.show()
 
 
 
