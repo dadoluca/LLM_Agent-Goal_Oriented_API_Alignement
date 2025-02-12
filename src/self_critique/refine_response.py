@@ -100,12 +100,12 @@ def generate_response_with_reflection(target_type, call_function, define_args, e
     feedback = None
     for attempt in range(1, max_attempts + 1):
         print(f"{target_type} STARTING... (attempt {attempt})")
-        goals = call_function(*define_args, feedback=feedback, mode = shotPromptingMode )
+        result = call_function(*define_args, feedback=feedback, mode = shotPromptingMode )
         print(f"{target_type} DONE...")
-        print(goals)
+        print(result)
 
         print(f"Evaluation for {target_type} STARTING...")
-        evaluation = get_evaluation(eval_mode, *eval_args, goals)
+        evaluation = get_evaluation(eval_mode, *eval_args, result)
         print(f"Evaluation for {target_type} DONE...")
 
         try:
@@ -119,10 +119,10 @@ def generate_response_with_reflection(target_type, call_function, define_args, e
 
             if score >= 8:
                 print("Satisfactory score achieved! Breaking out of the loop.")
-                return goals, score, critique
+                return result, score, critique
             else:
                 print("Unsatisfactory score. Retrying...")
-                feedback = Feedback(previous_output=goals, critique=critique)
+                feedback = Feedback(previous_output=result, critique=critique)
         except ValueError as e:
             print(f"Error while parsing evaluation: {e}")
             sys.exit(1)  # Exit the program if parsing fails
