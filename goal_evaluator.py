@@ -65,7 +65,7 @@ class GoalEvaluator:
         Evaluate the effectiveness of the generated goals.
         """
         # Compute cosine similarity between generated and reference goals
-        if similarities == False:
+        if type(similarities) == bool:
             similarities = self.compute_similarity(generated_goals, reference_goals)
             
         rate_table =  np.empty((len(generated_goals), len(reference_goals)), dtype=object)
