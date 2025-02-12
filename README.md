@@ -1,4 +1,4 @@
-# LLM Agent - Goal Oriented API Alignement
+# LLM Multi-Agent Chain for Goal Oriented API Alignement
 
 ## Overview
 This repository implements a system for aligning high-level goals with API endpoints using Goal-Oriented Requirements Engineering (GORE) techniques and Large Language Models (LLMs). The system extracts goals from natural language requirement documents, decomposes them into low-level goals, and maps them to corresponding API endpoints. The goal is to automate the process of translating system goals into actionable API calls for software applications.
