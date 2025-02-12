@@ -1,4 +1,16 @@
-# actors
+"""
+Shot learning examples for extracting and organizing actors, high-level goals, low-level goals, 
+and API mappings from software project descriptions.
+"""
+
+from enum import Enum
+
+class ShotPromptingMode(Enum):
+    ZERO_SHOT = "zero"
+    ONE_SHOT = "one"
+    FEW_SHOT = "few"
+
+#------------------------------ actors
 example1_actors = """
 
         **Example:**\n\n
@@ -40,7 +52,7 @@ example3_actors = """
         "name: Administrators, description: Individuals overseeing platform operations.\n"
         """
 
-# high level
+#------------------------------# high level goals
 
 example1_hl = """
     **Example:**\n\n
@@ -91,7 +103,7 @@ example3_hl = """
     '{ "highLevelGoals": ["Enable user to browse products", "Allow users to add products to cart", "Implement multiple payment options for checkout"]}'
     """
 
-# low level
+#------------------------------ low level goals
 
 example1_ll = """
     **Example:**:\n\n
@@ -138,7 +150,7 @@ example3_ll = """
     {"lowLevelGoals": ["Implement user authentication", "Integrate payment gateway", "Create shopping cart functionality"]}\n\n'
     """
 
-# map
+#------------------------------ APIs mapping
 
 example1_map = """
 **Example:**:\n\n
