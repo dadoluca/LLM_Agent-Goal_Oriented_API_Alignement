@@ -26,7 +26,7 @@ def get_evaluation(eval_mode: EvalMode, description, actors, high_level_goals=No
     if eval_mode == EvalMode.ACTORS:
         if high_level_goals != None or low_level_goals != None:
             raise ValueError("EvalMode.ACTORS can only be used when high_level_goals and low_level_goals are both None.")
-        provided_with = "a software description and the actors for said software"
+        provided_with = "a software description and the actors (end user roles) for said software"
         assume_this_is_ok = ""
         critique_this = "defining actors"
     elif eval_mode == EvalMode.HIGH_LEVEL:
@@ -34,7 +34,7 @@ def get_evaluation(eval_mode: EvalMode, description, actors, high_level_goals=No
             raise ValueError("EvalMode.HIGH_LEVEL can only be used when low_level_goals is None and high_level_goals is not None.")
         provided_with = "a software description, actors and high-level goals for said software"
         assume_this_is_ok = "Assuming the work done on actors is ok,"
-        critique_this = "defining high-level goals"
+        critique_this = "defining high-level end users goals"
         additional_prompt = f"""
         **High-level goals:**\n\n
         {high_level_goals}
@@ -45,7 +45,7 @@ def get_evaluation(eval_mode: EvalMode, description, actors, high_level_goals=No
             raise ValueError("EvalMode.LOW_LEVEL can only be used when both low_level_goals and high_level_goals are not None.")
         provided_with = "a software description, actors, high-level goals and low-level goals for said software"
         assume_this_is_ok = "Assuming the work done on actors and high-level goals is ok,"
-        critique_this = "defining low-level goals"
+        critique_this = "defining low-level end users goals.  Each low-level goal should theoretically correspond to a single action of the actor with the software."
         additional_prompt =  f"""
         **High-level goals:**\n\n
         {high_level_goals}
@@ -58,7 +58,7 @@ def get_evaluation(eval_mode: EvalMode, description, actors, high_level_goals=No
     prompt = f"""
         You are provided with {provided_with}.\n
         These informations were extracted by another assistant from the software description.\n
-        {assume_this_is_ok} your job is to critique the work done by the assistant on {critique_this}, scoring it on a scale from 0 to 10, assign a low score if you see any contradiction or important omissions.\n
+        {assume_this_is_ok} your job is to critique the work done by the assistant on {critique_this}, scoring it on a scale from 0 to 10, assign a low score if you see any contradiction or important omissions\n
         Just respond with a score and a feedback, like in this example:\n
         
         Score: [0-10]\n
