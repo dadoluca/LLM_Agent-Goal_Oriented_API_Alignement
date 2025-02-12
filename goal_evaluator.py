@@ -72,6 +72,8 @@ class GoalEvaluator:
         tn = 0  # True Negatives
         fn = 0  # False Negatives
 
+        matched_refs = set()
+
         # Loop through generated goals and check their matches with reference goals
         for gen_idx, gen_goal in enumerate(generated_goals):
 
@@ -82,12 +84,15 @@ class GoalEvaluator:
                 similarity_cell = similarities[gen_idx, ref_idx]
                 current_eval = ""
                 if  similarity_cell >= threshold:
-                    if similarity_cell == best_match_score:
+                    if similarity_cell == best_match_score and ref_idx not in matched_refs: #if it is the best match, it is above t and we haven't used the reference goal yet
                         tp += 1  # Correctly matched goal
                         current_eval = "TP"
+                        matched_refs.add(ref_idx)
                     else:
                         fp += 1  # Incorrectly matched goal
                         current_eval = "FP"
+
+                """
                 else:
                     if similarity_cell == best_match_score:
                         fn += 1 # If the best match doesn't meet the threshold, it's a false negative
@@ -95,7 +100,13 @@ class GoalEvaluator:
                     else:
                         tn += 1
                         current_eval = "TN"
+
                 rate_table[gen_idx, ref_idx] =f"({current_eval})" +f" {similarity_cell:.2f}"
+                """
+                fp = len(generated_goals) - tp
+                fn = len(reference_goals) - len(matched_refs)
+        
+        print(f"TP: {tp}, FP: {fp}, TN: {tn}, FN: {fn}")
     
         # Precision: TP / (TP + FP)
         precision = tp / (tp + fp) 
