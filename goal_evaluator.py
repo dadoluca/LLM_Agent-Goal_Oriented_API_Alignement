@@ -13,6 +13,7 @@ nltk.download('punkt')  # Tokenizer for splitting text into words/sentences
 nltk.download('punkt_tab')  # Tokenizer for splitting text into words/sentences
 nltk.download('wordnet')  # WordNet lemmatizer data
 nltk.download('omw-1.4')  # Open Multilingual WordNet data (optional for lemmatization)
+
 class GoalEvaluator:
     def __init__(self, model_name="bert-base-uncased", preprocess=True):
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -59,12 +60,14 @@ class GoalEvaluator:
         similarities = cosine_similarity(gen_embeddings, ref_embeddings)
         return similarities
 
-    def evaluate(self, generated_goals, reference_goals, threshold=0.9):
+    def evaluate(self, generated_goals, reference_goals, threshold=0.9, similarities=False):
         """
         Evaluate the effectiveness of the generated goals.
         """
         # Compute cosine similarity between generated and reference goals
-        similarities = self.compute_similarity(generated_goals, reference_goals)
+        if similarities == False:
+            similarities = self.compute_similarity(generated_goals, reference_goals)
+            
         rate_table =  np.empty((len(generated_goals), len(reference_goals)), dtype=object)
         
         # Initialize counters for TP, FP, TN, FN
@@ -130,16 +133,18 @@ class GoalEvaluator:
         precision_arr = []
         fpr_arr = []
 
+        similarities = self.compute_similarity(generated_goals, reference_goals)
+        
         for th in np.arange(0.01, 1, 0.01):
             # Computes the Similarities Matrix
-            results = self.evaluate(generated_goals, reference_goals, th)
+            results = self.evaluate(generated_goals, reference_goals, th, similarities=similarities)
 
-            print("recall: ", results["recall"], "precision: ", results["precision"], "fpr: ", results["fpr"])
             recall_arr.append(results["recall"])
             fpr_arr.append(results["fpr"])
             precision_arr.append(results["precision"])
             
         auc_roc = auc(fpr_arr, recall_arr) 
+        auc_prec_rec = auc(recall_arr, precision_arr)
         
         if not hide_prec_rec:
             # Plot della Precision-Recall Curve
@@ -156,23 +161,11 @@ class GoalEvaluator:
             # Plot della ROC Curve
             plt.figure(figsize=(8, 6))
             plt.plot(fpr_arr, recall_arr, marker='o', linestyle='-', color='b', label="ROC")
-            plt.xlabel("Recall")
-            plt.ylabel("Precision")
-            plt.title("Precision-Recall Curve")
+            plt.xlabel("False Positive Rate")
+            plt.ylabel("True Positive Rate")
+            plt.title("ROC Curve")
             plt.legend()
             plt.grid()
             plt.show()
             
-        return auc_roc
-
-
-
-'''
-        similarities = self.compute_similarity(generated_goals, reference_goals)
-        matches = (similarities.max(axis=1) > threshold).astype(int)
-        TP = sum(matches)
-        total_number_of_generated_goals = len(generated_goals) #as every generated goal is considered a prediction
-        precision = TP / total_number_of_generated_goals #TP / TP + FP
-        recall = TP / len(reference_goals)  #TP / TP + FN
-        f1_score = 2 * (precision * recall) / (precision + recall + 1e-9)
-'''
+        return auc_roc, auc_prec_rec
