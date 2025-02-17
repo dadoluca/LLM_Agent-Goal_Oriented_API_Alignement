@@ -7,8 +7,9 @@ def generate_mapping_apis_goals(lowLevelGoals, apiList, mode=ShotPromptingMode.Z
     
     sys_prompt = (
         "You are a helpful assistant that helps developers to map low-level goals to APIs."
-        " You will be given a low-level goal and a list of APIs. Your task is to identify which APIs best satisfies each low-level goal."        
-        "Respond with only the API name or 'No API Found' in the api_name field"
+        "You will be given a low-level goal and a list of APIs. Your task is to identify which APIs best satisfies each low-level goal."        
+        #"Respond with only the API name or 'No API Found' in the api_name field"
+        "If no API satisfies the goal, set the api_name field to exactly: 'No API Found'"
     )
     
     result = []
@@ -18,16 +19,15 @@ def generate_mapping_apis_goals(lowLevelGoals, apiList, mode=ShotPromptingMode.Z
         #print(f"Doing: {lowLevelgoal.get('description')} .." )
         
         prompt = f"""
+            {(example1_map if mode == ShotPromptingMode.ONE_SHOT else f"{example1_map}, {example2_map}" if mode == ShotPromptingMode.FEW_SHOT else "")}\n
+
             Given the following goal:
             {lowLevelgoal}
 
             And the list of APIs below:
             {apiList}
 
-            Identify the single API that best satisfies the goal. Maximum three APIs satisfy the goal. If no API satisfies the goal, return exactly "No API Found".
-            Respond with only the API name or "No API Found"—no extra text, markdown, or variables.
-
-            {(example1_map if mode == ShotPromptingMode.ONE_SHOT else f"{example1_map}, {example2_map}" if mode == ShotPromptingMode.FEW_SHOT else "")}\n
+            Identify the single API that best satisfies the goal. Maximum three APIs satisfy the goal.
 
             **Output:**\n
         """

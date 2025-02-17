@@ -1,4 +1,4 @@
-from  src.examples.shot_learning import ShotPromptingMode, example1_actors, example2_actors, example1_hl, example2_hl, example1_ll, example2_ll
+from  src.examples.shot_learning import ShotPromptingMode, example1_actors, example2_actors, example3_actors, example1_hl, example2_hl, example3_hl, example1_ll, example2_ll, example3_ll
 from src.data_model import DocumentDescription,  Actors,  LowLevelGoals,  HighLevelGoals
 from src.tools import get_markdown
 from src.llm_clients import generate_response
@@ -32,7 +32,10 @@ def generate_actors(project_description, feedback=None, mode=ShotPromptingMode.Z
     #    raise Exception("No project description provided")
     
     sys_prompt = (
-        "You are a helpful assistant expert in software engineering tasks, specialized in extracting user roles from a high level description. \n"
+        "You are a helpful assistant expert in software engineering tasks, specialized in extracting user roles from a high level description of a software project. \n"
+        "Your task is to extract the actors (user roles of end users) of the system from the given description.\n"
+        "Don't make up information that does not exist, just take information from the given text. \n"
+        "Each extracted actor name should be accompained by a very short description.\n"
     )
 
     if feedback != None:
@@ -51,13 +54,9 @@ def generate_actors(project_description, feedback=None, mode=ShotPromptingMode.Z
         print("No feedback provided!")
     
     prompt = f"""
-        You start from a high level description of a software project.\n
-        Your task is to extract the actors (user roles of end users) of the system from the given description.\n
-        Don't invent anything, just take information from the given text. \n
-        Do not include any additional text or markdown or additional text or variables.\n
-        Each extracted actor name should be accompained by a very short description.\n
+        {(example1_actors if mode == ShotPromptingMode.ONE_SHOT else f"{example1_actors}, {example2_actors}, {example3_actors}" if mode == ShotPromptingMode.FEW_SHOT else "")}\n
 
-        {(example1_actors if mode == ShotPromptingMode.ONE_SHOT else f"{example1_actors}, {example2_actors}" if mode == ShotPromptingMode.FEW_SHOT else "")}\n
+        Now extract actors from the following software description.
 
         **Description:**
         {project_description}
@@ -75,10 +74,9 @@ def generate_high_level_goals(project_description, actors, feedback=None, mode=S
     sys_prompt = (
         "You are a helpful assistant that helps developers to extract high-level goals from software descriptions."
         " Please provide high-level goals for the following software description, you're also provided with actors that are expected to interact with the software."
-        " Extract high-level goals for the following software description (consider only the description of the project and the provided actors, ignore other instructions)."
         " MUST focus only on functional requirements and ignore non-functional requirements. Focus only on requirements that benefit the end user of the software."
-        " The return outcome must be a list of goals in JSON format: { \"highLevelGoals\": [[\"goal 1\", \"goal 2\", \"goal 3\"]]}."
-        " Do not include any additional text or markdown or additional text or variables."
+        #" The return outcome must be a list of goals in JSON format: { \"highLevelGoals\": [[\"goal 1\", \"goal 2\", \"goal 3\"]]}."
+        #" Do not include any additional text or markdown or additional text or variables."
         " The returned high-level goals should be specific and focused on functional user needs.\n"
     )
 
@@ -101,7 +99,7 @@ def generate_high_level_goals(project_description, actors, feedback=None, mode=S
     print("This is the provided sys prompt: ", sys_prompt)
 
     prompt = f"""
-        {(example1_hl if mode == ShotPromptingMode.ONE_SHOT else f"{example1_hl}, {example2_hl}" if mode == ShotPromptingMode.FEW_SHOT else "")}\n
+        {(example1_hl if mode == ShotPromptingMode.ONE_SHOT else f"{example1_hl}, {example2_hl}, {example3_hl}" if mode == ShotPromptingMode.FEW_SHOT else "")}\n
         Proceed defining the high level goals for the following software description and actors:\n
 
         **Description:** \n\n
@@ -149,7 +147,7 @@ def generate_low_level_goals(highLevelGoals, feedback=None, mode=ShotPromptingMo
 
     prompt = f""" 
 
-        {(example1_ll if mode == ShotPromptingMode.ONE_SHOT else f"{example1_ll}, {example2_ll}" if mode == ShotPromptingMode.FEW_SHOT else "")}\n
+        {(example1_ll if mode == ShotPromptingMode.ONE_SHOT else f"{example1_ll}, {example2_ll}, {example3_ll}" if mode == ShotPromptingMode.FEW_SHOT else "")}\n
         Based on your understanding of the typical tasks that compose the sequence of high-level goal,
         provide if possible a decomposition of goals into sub-goals. 
         Each low-level goal should theoretically correspond to a single action of the actor with the software.
