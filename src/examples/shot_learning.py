@@ -180,7 +180,9 @@ example3_ll = """
     Output:\n
     {"lowLevelGoals": ["Enable service providers to create and update their profiles",
     "Allow service providers to specify their availability and service areas",
-    "Enable service providers to view, accept, or decline job requests through a dashboard",
+    "Enable service providers to view job requests through a dashboard",
+    "Enable service providers to accept job requests through a dashboard",
+    "Enable service providers to decline job requests through a dashboard",
     "Enable real-time notifications for new job requests and status updates",
     "Provide an option for service providers to update job progress (e.g., "In Progress," "Completed")",
     "Allow service providers to receive and manage customer reviews and ratings"
