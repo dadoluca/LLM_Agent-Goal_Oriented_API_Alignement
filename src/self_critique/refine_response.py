@@ -4,9 +4,9 @@ from  src.examples.shot_learning import ShotPromptingMode
 from src.llm_clients import generate_response_llama
 
 class EvalMode(Enum):
-    ACTORS = "actors"
-    HIGH_LEVEL = "high"
-    LOW_LEVEL = "low"
+    ACTORS = "Actors"
+    HIGH_LEVEL = "High Level Goals"
+    LOW_LEVEL = "Low Level Goals"
 
 class Feedback():
     def __init__(self, previous_output, critique):
