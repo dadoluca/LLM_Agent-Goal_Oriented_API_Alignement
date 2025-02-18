@@ -88,23 +88,48 @@ example2_hl = """
     name: Delivery Personnel, description: People who deliver orders.\n
     name: Restaurant Managers, description: Individuals managing restaurant operations.\n
     Output:\n
-    '{ "highLevelGoals": ["Allow customers to browse available menus and place orders", "Enable delivery personnel to manage delivery assignments and update order statuses", "Provide restaurant managers with tools to manage menus and track orders efficiently", "Facilitate seamless communication between customers, delivery personnel, and restaurant managers"]}'
+    '{ "highLevelGoals": ["Allow customers to browse available menus and place orders",
+    "Enable delivery personnel to manage delivery assignments and update order statuses",
+    "Provide restaurant managers with tools to manage menus and track orders efficiently",
+    "Facilitate seamless communication between customers, delivery personnel, and restaurant managers"
+    ]}'
     """
 
+
+#example3_hl = """
+#    **Example:**:\n\n
+#
+#    Description: \n\n
+#    "Create an online store platform where users can browse products, add them to their cart, and checkout with multiple payment options.\n"\n,
+#    Actors:\n
+#    name: Visitor, description: Individuals browsing the platform without creating an account.\n
+#    name: Developer, description: Professionals maintaining and improving the platform's functionality.\n
+#    Output:\n
+#    '{ "highLevelGoals": ["Enable user to browse products", "Allow users to add products to cart", "Implement multiple payment options for checkout"]}'
+#    """
+
+# OK
 example3_hl = """
     **Example:**:\n\n
 
     Description: \n\n
-    "Create an online store platform where users can browse products, add them to their cart, and checkout with multiple payment options.\n"\n,
+    "The application facilitates home maintenance services. Homeowners can browse available service providers, request quotes, and book appointments. Service providers can manage their profiles, respond to quote requests, and update job statuses. Administrators oversee platform operations, ensuring smooth communication and resolving disputes.\n"\n,
     Actors:\n
-    name: Visitor, description: Individuals browsing the platform without creating an account.\n
-    name: Developer, description: Professionals maintaining and improving the platform's functionality.\n
+    name: Homeowner, description: Individuals who can request maintenance services for their houses.\n
+    name: Service provider, description: Professionals and businesses that provide maintenance services to homeowners.\n
+    name: Administrator, description: Individuals that can oversee platform operations and resolve disputes.\n
     Output:\n
-    '{ "highLevelGoals": ["Enable user to browse products", "Allow users to add products to cart", "Implement multiple payment options for checkout"]}'
+    '{ "highLevelGoals": ["Enable homeowners to find and book home maintenance services",
+    "Allow service providers to manage their profiles and job requests",
+    "Allow administrators to oversee platform operations and resolve disputes",
+    "Ensure a smooth and transparent booking and job status update process",
+    "Facilitate communication between homeowners and service providers"
+    ]}'
     """
 
 #------------------------------ low level goals
 
+# OK
 example1_ll = """
     **Example:**:\n\n
     Given the high level goals:\n
@@ -127,27 +152,41 @@ example1_ll = """
     }\n\n
     """
 
+# OK
 example2_ll = """
     **Example:**:\n\n
     Given the high level goal:\n
     "Allow customers to browse available menus and place orders"\n
     Output:\n
     {"lowLevelGoals":
-        ["Design a user-friendly interface for menu browsing",
-        "Implement a search functionality for specific dishes or categories",
-        "Enable customers to customize orders (e.g., add toppings or remove ingredients)",
-        "Integrate a secure checkout system for placing orders",
-        "Allow users to save favorite orders for quick reordering"
+        [
+        "Enable customers to search for specific dishes",
+        "Enable customers to filter for specific categories",
+        "Enable customers to sort dishes by popularity",
+        "Show real-time availability of a dish",
+        "Enable users to customize dishes",
+        "Allow users to perform a secure checkout when placing orders",
+        "Allow users to save favorite orders for quick reordering",
+        "Send an order confirmation notification"
       ]
     }\n\n
     """
 
+# OK
 example3_ll = """
     **Example:**:\n\n
     Given the high level goal:\n
-    "Build an online shopping platform"\n
+    "Allow service providers to manage their profiles and job requests."\n
     Output:\n
-    {"lowLevelGoals": ["Implement user authentication", "Integrate payment gateway", "Create shopping cart functionality"]}\n\n'
+    {"lowLevelGoals": ["Enable service providers to create and update their profiles",
+    "Allow service providers to specify their availability and service areas",
+    "Enable service providers to view job requests through a dashboard",
+    "Enable service providers to accept job requests through a dashboard",
+    "Enable service providers to decline job requests through a dashboard",
+    "Enable real-time notifications for new job requests and status updates",
+    "Provide an option for service providers to update job progress (e.g., "In Progress," "Completed")",
+    "Allow service providers to receive and manage customer reviews and ratings"
+    ]}\n\n'
     """
 
 #------------------------------ APIs mapping

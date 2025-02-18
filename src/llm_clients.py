@@ -36,18 +36,18 @@ def generate_response(prompt, sys_prompt, response_format):
     return response.choices[0].message.parsed
 
 def generate_response_llama(prompt, sys_prompt):
-    """response = llama.beta.chat.completions.parse(
+    response = llama.beta.chat.completions.parse(
         messages=[
             { "role": "system", "content":  sys_prompt},
             { "role": "user", "content": prompt }
         ],
-        #model="llama3.3-70b",
-        model="llama3.1-8b",
+        model="llama3.3-70b",
+        #model="llama3.1-8b",
         max_tokens=2000,
-        #response_format=response_format,
     )
     
-    return response.choices[0].message.content"""
+    return response.choices[0].message.content
+    """
     response = client.beta.chat.completions.parse(
         messages=[
             { "role": "system", "content":  sys_prompt},
@@ -58,5 +58,6 @@ def generate_response_llama(prompt, sys_prompt):
         max_tokens=2000,
     )
     return response.choices[0].message.content
+    """
 
 
