@@ -3,6 +3,8 @@ from src.examples.shot_learning import ShotPromptingMode, example1_map, example2
 from src.data_model import APIMapping
 from src.tools import api_list_to_string
 from src.llm_clients import generate_response
+from tabulate import tabulate # Import tabulate for nice table formatting
+
 def generate_mapping_apis_goals(lowLevelGoals, apiList, mode=ShotPromptingMode.ZERO_SHOT):
     
     sys_prompt = (
@@ -33,7 +35,9 @@ def generate_mapping_apis_goals(lowLevelGoals, apiList, mode=ShotPromptingMode.Z
         """
 
         response = generate_response(prompt, sys_prompt, APIMapping)
-        print("Goal: ",response.low_level_goal.description)
+        print("hlg name: ", response.low_level_goal.high_level_associated.name)
+        print("Goal name: ",response.low_level_goal.name)
+        print("Goal description: ",response.low_level_goal.description)
         print("APIs: ", api_list_to_string(response.APIs))
         result.append(response)
 
@@ -42,7 +46,7 @@ def generate_mapping_apis_goals(lowLevelGoals, apiList, mode=ShotPromptingMode.Z
 
 
 
-from tabulate import tabulate # Import tabulate for nice table formatting
+#from tabulate import tabulate 
 
 def print_api_goal_mapping(mappings):
     """
@@ -58,8 +62,10 @@ def print_api_goal_mapping(mappings):
         table_data = []
         for mapping in mappings:
             # Ensure entry contains expected keys and values
-            low_level_goal = mapping.low_level_goal.description
-            table_data.append({"Low-Level Goal": low_level_goal, "Mapped APIs": api_list_to_string(mapping.APIs)})
+            associated_high_level = mapping.low_level_goal.high_level_associated.name
+            low_level_goal_name = mapping.low_level_goal.name
+            low_level_goal_description = mapping.low_level_goal.description
+            table_data.append({"High-Level Goal name": associated_high_level,"Low-Level Goal name": low_level_goal_name, "Low-Level Goal description": low_level_goal_description, "Mapped APIs": api_list_to_string(mapping.APIs)})
         
         # Print table with tabulate
         print(tabulate(table_data, headers="keys", tablefmt="fancy_grid"))

@@ -73,7 +73,7 @@ def generate_actors(project_description, feedback=None, mode=ShotPromptingMode.Z
 def generate_high_level_goals(project_description, actors, feedback=None, mode=ShotPromptingMode.ZERO_SHOT):
     sys_prompt = (
         "You are a helpful assistant that helps developers to extract high-level goals from software descriptions."
-        " Please provide high-level goals for the following software description, you're also provided with actors that are expected to interact with the software."
+        " You're tasked with extracting high level goals from a software description, you're also provided with actors that are expected to interact with the software."
         " MUST focus only on functional requirements and ignore non-functional requirements. Focus only on requirements that benefit the end user of the software."
         #" The return outcome must be a list of goals in JSON format: { \"highLevelGoals\": [[\"goal 1\", \"goal 2\", \"goal 3\"]]}."
         #" Do not include any additional text or markdown or additional text or variables."
