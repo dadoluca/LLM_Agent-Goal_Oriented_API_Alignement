@@ -1,12 +1,13 @@
 import sys
+import json
 from enum import Enum
 from  src.examples.shot_learning import ShotPromptingMode
 from src.llm_clients import generate_response_llama
 
 class EvalMode(Enum):
-    ACTORS = "actors"
-    HIGH_LEVEL = "high"
-    LOW_LEVEL = "low"
+    ACTORS = "Actors"
+    HIGH_LEVEL = "High Level Goals"
+    LOW_LEVEL = "Low Level Goals"
 
 class Feedback():
     def __init__(self, previous_output, critique):
@@ -20,6 +21,8 @@ def get_evaluation(eval_mode: EvalMode, description, actors, high_level_goals=No
     sys_prompt = (
         "You're an helpful assistant, expert in the field of software engineering."
         )
+
+    methods = "scoring it on a scale from 0 to 10, assign a low score if you see any contradiction or important omissions"
 
     assume_this_is_ok = ""
     additional_prompt = ""
@@ -46,6 +49,25 @@ def get_evaluation(eval_mode: EvalMode, description, actors, high_level_goals=No
         provided_with = "a software description, actors, high-level goals and low-level goals for said software"
         assume_this_is_ok = "Assuming the work done on actors and high-level goals is ok,"
         critique_this = "defining low-level end users goals.  Each low-level goal should theoretically correspond to a single action of the actor with the software."
+
+        methods = f"""Given the list of low level goals, compute, for each one the INVEST score. Then return the overall score and a final comment to improve it.
+        INVEST: administer a questionnaire to ask whether each generated requirement (or user story) is:
+        • Independent: Check if the requirement stands alone.
+        • Negotiable: Ensure the requirement is open to change and discussion.
+        • Valuable: Ensure the requirement adds tangible value to users or stakeholders.
+        • Estimable: Check if the requirement is clear enough for estimation.
+        • Small: Verify that the requirement is small and actionable.
+        • Testable: Ensure the requirement can be tested and validated.
+        For each criteria assign a score from 0 to 2, where 0 means thet the criteria is not fullfilled, and 2 means that the criteria is mostly satisfied, then sum the scores to obtain the INVEST score.
+
+        Once you have computed each low-level's INVEST score, sum them and return the overall score in the 'score' field.
+
+        For example:
+        Requirement_1 - INVEST score = 10
+        Requirement_2 - INVEST score = 12
+        then, score = 10+12 = 22
+        """
+
         additional_prompt =  f"""
         **High-level goals:**\n\n
         {high_level_goals}
@@ -58,13 +80,12 @@ def get_evaluation(eval_mode: EvalMode, description, actors, high_level_goals=No
     prompt = f"""
         You are provided with {provided_with}.\n
         These informations were extracted by another assistant from the software description.\n
-        {assume_this_is_ok} your job is to critique the work done by the assistant on {critique_this}, scoring it on a scale from 0 to 10, assign a low score if you see any contradiction or important omissions\n
-        Just respond with a score and a feedback, like in this example:\n
+        {assume_this_is_ok} your job is to critique the work done by the assistant on {critique_this}, {methods}\n
+        Just respond with a score and a feedback, do not use markdown formatting. Follow this example:\n
         
-        Score: [0-10]\n
-        Feedback: [Feedback here]\n
+        {{"score": your_score, "feedback": "your_feedback"}}
 
-        Do not add any other comments, just the above mentioned lines.\n
+        Do not add any other comments, just the above mentioned json.\n
 
         **Description:** \n\n
         {description}
@@ -76,10 +97,18 @@ def get_evaluation(eval_mode: EvalMode, description, actors, high_level_goals=No
         **Output:**\n\n
     """
 
+    print(prompt)
+
     critique = generate_response_llama(prompt, sys_prompt)
-    return critique 
+    parsed_critique = json.loads(critique)
+    score = parsed_critique["score"] if eval_mode == EvalMode.HIGH_LEVEL or eval_mode == EvalMode.ACTORS else (10 * parsed_critique["score"]) / (12 * len(low_level_goals.low_level_goals))#score, critique = parse_evaluation(evaluation)
+    if eval_mode == EvalMode.LOW_LEVEL:
+        print("Original score", parsed_critique["score"], 12*len(low_level_goals.low_level_goals))
+    critique = parsed_critique["feedback"]
+    return score, critique
 
 def parse_evaluation(evaluation):
+    print(evaluation)
     lines = evaluation.strip().split("\n")
     if len(lines) < 3:
             raise ValueError("Input text is not in the expected format.")
@@ -105,11 +134,10 @@ def generate_response_with_reflection(target_type, call_function, define_args, e
         print(result)
 
         print(f"Evaluation for {target_type} STARTING...")
-        evaluation = get_evaluation(eval_mode, *eval_args, result)
+        score, critique = get_evaluation(eval_mode, *eval_args, result)
         print(f"Evaluation for {target_type} DONE...")
 
         try:
-            score, critique = parse_evaluation(evaluation)
             print(f"Score: {score}")
             print(f"Critique: {critique}")
 
@@ -123,6 +151,8 @@ def generate_response_with_reflection(target_type, call_function, define_args, e
             else:
                 print("Unsatisfactory score. Retrying...")
                 feedback = Feedback(previous_output=result, critique=critique)
+            
+
         except ValueError as e:
             print(f"Error while parsing evaluation: {e}")
             sys.exit(1)  # Exit the program if parsing fails
