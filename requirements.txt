@@ -1,0 +1,12 @@
+torch
+transformers
+torchtext
+openai
+icecream
+tqdm
+tabulate
+requests
+scikit-learn
+nltk
+matplotlib
+numpy

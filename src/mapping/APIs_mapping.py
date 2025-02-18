@@ -1,7 +1,7 @@
 
 from src.examples.shot_learning import ShotPromptingMode, example1_map, example2_map
 from src.data_model import APIMapping
-from src.tools import api_list_to_string
+from utils import api_list_to_string
 from src.llm_clients import generate_response
 from tabulate import tabulate # Import tabulate for nice table formatting
 
