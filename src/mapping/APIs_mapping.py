@@ -11,7 +11,7 @@ def generate_mapping_apis_goals(lowLevelGoals, apiList, mode=ShotPromptingMode.Z
         "You are a helpful assistant that helps developers to map low-level goals to APIs."
         "You will be given a low-level goal and a list of APIs. Your task is to identify which APIs best satisfies each low-level goal."        
         #"Respond with only the API name or 'No API Found' in the api_name field"
-        "If no API satisfies the goal, set the api_name field to exactly: 'No API Found'"
+        "If no API satisfies the goal, set the api_name field to exactly: '(Not applicable with the current set of APIs)'"
     )
     
     result = []
@@ -55,7 +55,7 @@ def print_api_goal_mapping(mappings):
     Parameters:
     - mapping: A list of dictionaries with the mapping information. Each dictionary contains:
         - 'low_level_goal': The goal.
-        - 'api': The API satisfying the goal or 'No API Found'.
+        - 'api': The API satisfying the goal or '(Not applicable with the current set of APIs)'.
     """
     try:
         # Prepare data for tabulation
