@@ -9,8 +9,8 @@ def get_markdown(link: str):
     return res.text
 
 
-def get_api_list_from_swagger():
-    api_list = get_markdown("https://raw.githubusercontent.com/WebFuzzing/EMB/refs/heads/master/openapi-swagger/genome-nexus.json")
+def get_api_list_from_swagger(link):
+    api_list = get_markdown(link)
 
     json_api_list = json.loads(api_list)["paths"]
     api_paths = json_api_list.keys()
