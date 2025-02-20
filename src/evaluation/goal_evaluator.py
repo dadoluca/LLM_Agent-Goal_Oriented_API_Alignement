@@ -135,7 +135,12 @@ class GoalEvaluator:
         summary = []
 
         similarities = self.compute_similarity(generated_goals, reference_goals)
+        best_f1_score = -1
+        best_summary = ""
         
+        with open(output_file, "a") as f:
+            f.write("th recall fpr f1_score precision\n")
+
         for th in np.arange(0.01, 1, 0.01):
             # Computes the Similarities Matrix
             results = self.evaluate(generated_goals, reference_goals, th, similarities=similarities)
@@ -143,13 +148,17 @@ class GoalEvaluator:
             recall_arr.append(results["recall"])
             fpr_arr.append(results["fpr"])
             precision_arr.append(results["precision"])
-            
-            summary.append(f"{th} {results["recall"]} {results['fpr']} {results['f1_score']} {results["precision"]}")
+            summary_str = f"{th} {results["recall"]} {results['fpr']} {results['f1_score']} {results["precision"]}"
+            summary.append(summary_str)
             
             if save_to_file:
                 with open(output_file, "a") as f:
-                    f.write(f"{th} {results["recall"]} {results['fpr']} {results['f1_score']} {results["precision"]}\n")
+                    f.write(summary_str + "\n")
 
+            if best_f1_score < results["f1_score"]:
+                best_f1_score = results["f1_score"]
+                best_summary = f"th: {th}, preciion: {results["precision"]}, recall: {results["recall"]}, fpr: {results['fpr']}, f1_score: {results['f1_score']}"
+                
         auc_roc = auc(fpr_arr, recall_arr) 
         auc_prec_rec = auc(recall_arr, precision_arr)
         
@@ -175,4 +184,4 @@ class GoalEvaluator:
             plt.grid()
             plt.show()
             
-        return auc_roc, auc_prec_rec, summary
+        return auc_roc, auc_prec_rec, summary, best_summary
