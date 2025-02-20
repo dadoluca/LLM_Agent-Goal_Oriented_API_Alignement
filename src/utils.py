@@ -33,6 +33,3 @@ def api_list_to_string(api_list):
     # Remove the trailing comma and add a newline
     apis = apis.rstrip(", ") + "\n"
     return apis
-
-
-get_api_list_from_swagger()
