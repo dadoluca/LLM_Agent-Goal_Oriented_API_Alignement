@@ -46,6 +46,7 @@ This project aims to explore the following research questions:
 ## Case Study: Genome Nexus
 
 Genome Nexus is an open-source project that aggregates, annotates, and standardizes genomic variant data. Our system applies automated goal decomposition to align its objectives with available API functionalities. The structured goal mapping facilitates efficient API interactions, reducing manual effort in requirement-to-API translation.
+[Genome Github Repository](https://github.com/WebFuzzing/EMB/tree/master/jdk_8_maven/cs/rest-gui/genome-nexus)
 
 ## License
 
