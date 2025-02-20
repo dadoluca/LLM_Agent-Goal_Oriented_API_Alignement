@@ -76,8 +76,39 @@ GESTAO_HOSPITAL = {
     "link-readme": "https://github.com/ValchanOficial/GestaoHospital/blob/master/README.md",
     "swagger": "https://raw.githubusercontent.com/WebFuzzing/EMB/refs/heads/master/openapi-swagger/gestaohospital-rest.json",
     "actors": [
-        "..", "..", ".."
+        "Hospital Manager",
+        "Healthcare Staff",
+        "Patients",
+        "Hospital Logistics Staff",
     ],
-    "highLevelGoals": ["...", "..."],
-    "lowLevelGoals" : ["...", "..."]
+    "highLevelGoals": [
+        "Manage Hospital",
+        "Manage Hospital Beds and Patients",
+        "Manage Hospital Blood Bank",
+        "Manage Products",
+        "Indicate Hospital to Patients",
+    ],
+    "lowLevelGoals" : [
+        #"Manage Hospital",
+        "Allow Registration of a New Hospital",
+        "Allow Deletion of a Hospital",
+        "Allow Modification of a Hospital",
+
+        #"Indicate Hospital to Patients",
+        "Recommend Nearest Hospital",
+        "Return Information on a Hospital",
+
+        #"Manage Products and Blood Bank",
+        "View Products and Quantities",
+        "Register Products",
+        "Delete Products",
+        "Change Product Quantities",
+        "View Info on a Single Product",
+        "Request a Product",
+
+        #"Manage Patients and Beds",
+        "View Patient Info",
+        "Register a Patient at a Hospital",
+        "Change Patient Info",
+    ]
 }
