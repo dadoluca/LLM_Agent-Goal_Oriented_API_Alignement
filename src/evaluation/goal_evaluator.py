@@ -125,13 +125,14 @@ class GoalEvaluator:
             "rate_table": rate_table
         }
         
-    def print_roc_prec_rec_curve(self, generated_goals, reference_goals, hide_roc=False,   hide_prec_rec=False):     
+    def print_roc_prec_rec_curve(self, generated_goals, reference_goals, hide_roc=False,   hide_prec_rec=False, save_to_file=False, output_file="output.txt"):     
         """
         Plot the ROC and Precision-Recall curves for the generated goals.
         """           
         recall_arr = []
         precision_arr = []
         fpr_arr = []
+        summary = []
 
         similarities = self.compute_similarity(generated_goals, reference_goals)
         
@@ -143,6 +144,12 @@ class GoalEvaluator:
             fpr_arr.append(results["fpr"])
             precision_arr.append(results["precision"])
             
+            summary.append(f"{th} {results["recall"]} {results['fpr']} {results['f1_score']} {results["precision"]}")
+            
+            if save_to_file:
+                with open(output_file, "a") as f:
+                    f.write(f"{th} {results["recall"]} {results['fpr']} {results['f1_score']} {results["precision"]}\n")
+
         auc_roc = auc(fpr_arr, recall_arr) 
         auc_prec_rec = auc(recall_arr, precision_arr)
         
@@ -168,4 +175,4 @@ class GoalEvaluator:
             plt.grid()
             plt.show()
             
-        return auc_roc, auc_prec_rec
+        return auc_roc, auc_prec_rec, summary
