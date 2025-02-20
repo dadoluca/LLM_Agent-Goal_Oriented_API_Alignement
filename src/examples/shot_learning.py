@@ -89,9 +89,13 @@ example2_hl = """
     name: Restaurant Managers, description: Individuals managing restaurant operations.\n
     Output:\n
     '{ "highLevelGoals": ["Allow customers to browse available menus and place orders",
+    "Allow customer to track the status of their orders in real-time",
+    "Allow customers to make secure payments for their orders",
+    "Allow customers to provide feedback and rate their experience",
     "Enable delivery personnel to manage delivery assignments and update order statuses",
-    "Provide restaurant managers with tools to manage menus and track orders efficiently",
-    "Facilitate seamless communication between customers, delivery personnel, and restaurant managers"
+    "Enable delivery personnel to ommunicate with customers if needed"
+    "Provide restaurant managers with tools to manage and update restaurant menus and oversee restaurant performance through analytics.",
+    "Provide resturant managers to receive and track incoming customer orders"
     ]}'
     """
 
@@ -160,14 +164,20 @@ example2_ll = """
     Output:\n
     {"lowLevelGoals":
         [
-        "Enable customers to search for specific dishes",
-        "Enable customers to filter for specific categories",
-        "Enable customers to sort dishes by popularity",
-        "Show real-time availability of a dish",
-        "Enable users to customize dishes",
-        "Allow users to perform a secure checkout when placing orders",
-        "Allow users to save favorite orders for quick reordering",
-        "Send an order confirmation notification"
+        "Enable customers to retrieve a list of available restaurants and their menus",
+        "Allow customers to submit an order with selected food items and payment details",
+        "Enable customers to fetch real-time updates on order status (e.g., "preparing," "out for delivery")",
+        "Allow customers to submit payments securely through an integrated payment system",
+        "Enable customers to submit a review and rating for a completed order",
+        "Enable delivery personnel to fetch assigned delivery orders with details (e.g., customer address, order contents).",
+        "Allow delivery personnel to update the status of an order (e.g., "picked up," "delivered")",
+        "Enable delivery personnel to retrieve route optimization suggestions based on delivery location",
+        "Allow delivery personnel to send and receive messages with customers through the system",
+        "Enable restaurant managers to add, update, or remove menu items",
+        "Allow restaurant managers to retrieve a list of incoming customer orders",
+        "Enable restaurant managers to update the status of an order (e.g., "preparing," "ready for pickup")",
+        "Allow restaurant managers to fetch restaurant performance analytics (e.g., sales trends, order volume)",
+
       ]
     }\n\n
     """

@@ -52,7 +52,7 @@ def generate_actors(project_description, feedback=None, mode=ShotPromptingMode.Z
         print("No feedback provided!")
     
     prompt = f"""
-        {(example1_actors if mode == ShotPromptingMode.ONE_SHOT else f"{example1_actors}, {example2_actors}, {example3_actors}" if mode == ShotPromptingMode.FEW_SHOT else "")}\n
+        {(example1_actors if mode == ShotPromptingMode.ONE_SHOT else f"{example1_actors}, {example2_actors}" if mode == ShotPromptingMode.FEW_SHOT else "")}\n
 
         Now extract the actors (roles of end users) from the following software description.
 
@@ -96,7 +96,7 @@ def generate_high_level_goals(project_description, actors, feedback=None, mode=S
     print("This is the provided sys prompt: ", sys_prompt)
 
     prompt = f"""
-        {(example1_hl if mode == ShotPromptingMode.ONE_SHOT else f"{example1_hl}, {example2_hl}, {example3_hl}" if mode == ShotPromptingMode.FEW_SHOT else "")}\n
+        {(example1_hl if mode == ShotPromptingMode.ONE_SHOT else f"{example1_hl}, {example2_hl}" if mode == ShotPromptingMode.FEW_SHOT else "")}\n
         
         \nYour task: based on your understanding of the typical needs and interests of the following actors in the following software project, help generate a list of higl level goals.\n
 
@@ -121,7 +121,7 @@ def generate_low_level_goals(highLevelGoals, feedback=None, mode=ShotPromptingMo
         "Elicit low-level goals for a specific stakeholder in a software project "
         " The low-level goals that you create MUST be structured to match against a set of API calls. Don't be too generic, for example, avoid goals like 'make the software fast', 'develop a web interface' etc."
         "Each low-level goal MUST be phrased as an interaction with the system that could be implemented via an API call."
-        "Avoid generic goals like 'Access genetic data'. Instead, break them down into atomic actions linked to system capabilities."
+        "Avoid generic goals. Instead, break them down into atomic actions linked to system capabilities."
     )
 
     if feedback != None:
@@ -143,7 +143,7 @@ def generate_low_level_goals(highLevelGoals, feedback=None, mode=ShotPromptingMo
 
     prompt = f""" 
 
-        {(example1_ll if mode == ShotPromptingMode.ONE_SHOT else f"{example1_ll}, {example2_ll}, {example3_ll}" if mode == ShotPromptingMode.FEW_SHOT else "")}\n
+        {(example1_ll if mode == ShotPromptingMode.ONE_SHOT else f"{example1_ll}, {example2_ll}" if mode == ShotPromptingMode.FEW_SHOT else "")}\n
          \nYour task: based on your understanding of the typical tasks that compose the following sequence of high-level goals,
         provide if possible a decomposition of goals into sub-goals. 
         Each low-level goal should theoretically correspond to a single action of the actor with the software.
